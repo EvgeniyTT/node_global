@@ -27,5 +27,10 @@
     "@babel/preset-env": "^7.0.0",
     "@babel/register": "^7.0.0",
     "nodemon": "^1.18.6"
+  },
+  "dependencies": {
+    "csv-parser": "^2.1.0",
+    "get-stream": "^4.1.0",
+    "to-readable-stream": "^1.0.0"
   }
 }
