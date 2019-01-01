@@ -4,9 +4,7 @@ import {
   Importer,
   Product,
   User,
-  } from './models';
-
-console.log(config);
+} from './models';
 
 const dataFolder = './data/';
 
@@ -14,6 +12,10 @@ const user = new User();
 const product = new Product();
 const dirWatcher = new DirWatcher();
 const importer = new Importer();
+
+console.log(config);
+console.log(user);
+console.log(product);
 
 dirWatcher.on('changed', filePaths=> {
   filePaths.forEach(filePath =>  {

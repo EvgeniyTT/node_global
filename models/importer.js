@@ -21,13 +21,13 @@ export default class Importer {
         csvFile = toReadableStream(csvFile);
       }
       return getStream.array(csvFile.pipe(csvParser(this.csvParseOptions)));
-    })
+    });
   }
 
   importSync(path) {
     try {
       const contentCsv = fs.readFileSync(path, this.readOptions);
-      const records = csvParserSync(contentCsv, this.csvParseOptions)
+      const records = csvParserSync(contentCsv, this.csvParseOptions);
       return records;
     } catch(err) {
       console.error(`Error on reading file sync by path ${path}: ${err}`);
