@@ -5,12 +5,13 @@ const fsPromises = fs.promises;
 export default class DirWatcher extends EventEmitter {
   filesInDir = new Set();
 
-  async _getNewFilesByPath(path) {
+  async getNewFilesByPath(path) {
+    const pathWithEndingSlash = path[-1] === '/' ? path : path + '/';
     const newFiles = [];
     try {
       const files = await fsPromises.readdir(path);
       await Promise.all(files.map(async file => {
-        const filePath = `${path}${file}`;
+        const filePath = `${pathWithEndingSlash}${file}`;
         const stats = await fsPromises.lstat(filePath);
         if(stats.isFile && !this.filesInDir.has(filePath)) {
           this.filesInDir.add(filePath);
@@ -26,7 +27,7 @@ export default class DirWatcher extends EventEmitter {
   
   watch(path, delay) {
     setInterval(async () => {
-      const newFiles = await this._getNewFilesByPath(path);
+      const newFiles = await this.getNewFilesByPath(path);
       if (newFiles && newFiles.length) {
         this.emit('changed', newFiles);
       }

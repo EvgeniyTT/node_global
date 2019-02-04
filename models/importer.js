@@ -1,21 +1,28 @@
-import csvParser from 'csv-parser';
+import csvParser from 'csv-parse';
 import csvParserSync from 'csv-parse/lib/sync';
 import toReadableStream from 'to-readable-stream';
 import getStream from 'get-stream';
 import fs from 'fs';
+// import csv from 'csvtojson';
+
 const fsPromises = fs.promises;
 
 export default class Importer {
-
-  readOptions = {
-    encoding: 'utf8'
-  };
-  csvParseOptions = {
-    columns: true,
-    skip_empty_lines: true
-  };
+  constructor(){
+    this.readOptions = {
+      encoding: 'utf8'
+    };
+    this.csvParseOptions = {
+      delimiter: ',',
+      columns: true,
+      skip_empty_lines: true
+    };
+  }
 
   import(path) {
+    // TODO: why do we need to return a promise with file data?
+    // fs.createReadStream(path).pipe(csv()).pipe(process.stdout);
+
     return fsPromises.readFile(path).then(csvFile => {
       if (typeof csvFile === 'string' || Buffer.isBuffer(csvFile)) {
         csvFile = toReadableStream(csvFile);
