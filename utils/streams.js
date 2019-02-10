@@ -1,3 +1,5 @@
+// usage example: npm run stream -- -a cssBundler --path=data/css
+
 import program from 'commander';
 import fs from 'fs';
 import Importer from '../models/importer';
@@ -5,8 +7,6 @@ import DirWatcher from '../models/dirwatcher';
 import toReadableStream from 'to-readable-stream';
 import https from 'https';
 import { reverse, toUpper } from './transform';
-
-const fsPromises = fs.promises;
 
 const importer = new Importer();
 const dirWatcher = new DirWatcher();
@@ -16,7 +16,7 @@ const convertPathExtensionToJson = filePath => {
   newFilePath.pop();
   newFilePath.push('json');
   return newFilePath.join('.');
-}
+};
 
 const exit = msg => {
   console.error(msg);
@@ -66,10 +66,10 @@ const actions = {
     isPathRequired: true
   },
   reverse: {
-    fn: str => { process.stdin.pipe(reverse).pipe(process.stdout) }
+    fn: () => { process.stdin.pipe(reverse).pipe(process.stdout); }
   },
   transform: {
-    fn: () => { process.stdin.pipe(toUpper).pipe(process.stdout) }
+    fn: () => { process.stdin.pipe(toUpper).pipe(process.stdout); }
   },
   outputFile: {
     fn: filePath => { fs.createReadStream(filePath).pipe(process.stdout); },
@@ -83,9 +83,9 @@ program
   .option('-a, --action <reverse|transform|outputFile|convertFromFile|convertToFile|cssBundler>', 'Action')
   .option('-f, --file <filePath>', 'Path to file')
   .option('-p, --path <dirPath>', 'Path to directory with css files')
-  .option('-h, --help', 'Help')
   .parse(process.argv);
 
+  
 if (!(program.action in actions)) exit('No such action. Please use help to see available options');
 
 if (actions[program.action].isFileRequired) {
