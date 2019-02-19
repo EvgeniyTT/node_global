@@ -1,3 +1,5 @@
+import express from 'express';
+import bodyParser from 'body-parser';
 import config from './config/config.json';
 import {
   DirWatcher,
@@ -5,17 +7,16 @@ import {
   Product,
   User,
 } from './models';
+import { queryParser, cookieParser } from './middlewares';
+import { userRouter, productRouter } from './routes';
+import { PRODUCTS_URL, PRODUCT_URL, REVIEWS_URL, USERS_URL } from './utils/endpoints';
 
-const dataFolder = './data/';
+const dataFolder = './data';
 
 const user = new User();
 const product = new Product();
 const dirWatcher = new DirWatcher();
 const importer = new Importer();
-
-console.log(config);
-console.log(user);
-console.log(product);
 
 dirWatcher.on('changed', filePaths=> {
   filePaths.forEach(filePath =>  {
@@ -32,3 +33,19 @@ dirWatcher.on('error', err => {
 });
 
 dirWatcher.watch(dataFolder, 1000);
+
+const app = express();
+
+app.use(queryParser);
+app.use(cookieParser);
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+app.use(USERS_URL, userRouter);
+app.use(PRODUCTS_URL, productRouter);
+
+app.get('/', (req, res) => {
+  res.send(`Available endpoints are: ${PRODUCTS_URL}, ${PRODUCT_URL}, ${REVIEWS_URL}, ${USERS_URL}`);
+});
+
+export default app;
