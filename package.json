@@ -6,9 +6,14 @@
   "scripts": {
     "test": "test",
     "start": "nodemon --exec babel-node app.js",
+    "express": "nodemon --exec babel-node index.js",
     "lint": "eslint **/**.*",
     "lint-fix": "eslint --fix **/**.*",
-    "stream": "npx babel-node --presets @babel/env utils/streams.js"
+    "stream": "npx babel-node --presets @babel/env utils/streams.js",
+    "text-server": "node http-servers/plain-text-server.js",
+    "html-server": "node http-servers/html-server.js",
+    "json-server": "node http-servers/json-server.js",
+    "echo-server": "node http-servers/echo-server.js"
   },
   "keywords": [
     "Node.js"
@@ -34,9 +39,12 @@
     "nodemon": "^1.18.6"
   },
   "dependencies": {
+    "body-parser": "^1.18.3",
     "commander": "^2.19.0",
     "csv-parse": "^2.5.0",
+    "express": "^4.16.4",
     "get-stream": "^4.1.0",
+    "stream-replace": "^1.0.0",
     "to-readable-stream": "^1.0.0"
   }
 }

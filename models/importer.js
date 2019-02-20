@@ -22,7 +22,7 @@ export default class Importer {
   import(path) {
     // TODO: why do we need to return a promise with file data?
     // fs.createReadStream(path).pipe(csv()).pipe(process.stdout);
-
+    // TODO: check if it's a file or directory
     return fsPromises.readFile(path).then(csvFile => {
       if (typeof csvFile === 'string' || Buffer.isBuffer(csvFile)) {
         csvFile = toReadableStream(csvFile);
@@ -33,6 +33,7 @@ export default class Importer {
 
   importSync(path) {
     try {
+      // TODO: check if it's a file or directory
       const contentCsv = fs.readFileSync(path, this.readOptions);
       const records = csvParserSync(contentCsv, this.csvParseOptions);
       return records;
