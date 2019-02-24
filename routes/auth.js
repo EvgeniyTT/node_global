@@ -1,5 +1,5 @@
 import express from 'express';
-import { users } from './fakeData';
+import { users } from '../helpers/fakeData';
 import { makeToken } from '../utils/jwt';
 
 const authRouter = express.Router();

@@ -11,11 +11,13 @@ import {
   queryParser,
   cookieParser,
   checkToken,
+  passport,
 } from './middlewares';
 import {
   userRouter,
   productRouter,
   authRouter,
+  loginRouter,
 } from './routes';
 import {
   PRODUCTS_URL,
@@ -23,6 +25,7 @@ import {
   REVIEWS_URL,
   USERS_URL,
   AUTH_URL,
+  LOGIN_URL,
 } from './utils/endpoints';
 
 const dataFolder = './data';
@@ -57,12 +60,22 @@ app.use(bodyParser.json());
 
 app.use(AUTH_URL, authRouter);
 
+
+// Initialize Passport and restore authentication state, if any, from the
+// session.
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(LOGIN_URL,
+  passport.authenticate('local', { failureRedirect: AUTH_URL }),
+  loginRouter
+);
+
 app.use(checkToken);
 app.use(USERS_URL, userRouter);
 app.use(PRODUCTS_URL, productRouter);
 
 app.get('/', (req, res) => {
-  res.send(`Available endpoints are: ${PRODUCTS_URL}, ${PRODUCT_URL}, ${REVIEWS_URL}, ${USERS_URL}, ${AUTH_URL}`);
+  res.send(`Available endpoints are: ${PRODUCTS_URL}, ${PRODUCT_URL}, ${REVIEWS_URL}, ${USERS_URL}, ${AUTH_URL}, ${LOGIN_URL}`);
 });
 
 // error handler, no stacktraces leaked to user
