@@ -1,5 +1,7 @@
 import passport from 'passport';
-import { Strategy } from 'passport-local';
+import { Strategy as localStrategy } from 'passport-local';
+import { Strategy as TwitterStrategy } from 'passport-twitter';
+import { Strategy as FacebookStrategy } from 'passport-facebook';
 import { decodeToken } from '../utils/jwt';
 import { users } from '../helpers/fakeData';
 
@@ -21,13 +23,25 @@ export const checkToken = (req, res, next) => {
 // (`username` and `password`) submitted by the user.  The function must verify
 // that the password is correct and then invoke `cb` with a user object, which
 // will be set at `req.user` in route handlers after authentication.
-passport.use(new Strategy(
+passport.use(new localStrategy(
   (username, password, cb) => {
     const user = users.find(v => v.login === username && v.pass === password);
     if (!user) { return cb(null, false); }
     return cb(null, user);
   }
 ));
+
+// passport.use(new TwitterStrategy({
+//   consumerKey: TWITTER_CONSUMER_KEY,
+//   consumerSecret: TWITTER_CONSUMER_SECRET,
+//   callbackURL: "http://127.0.0.1:3000/auth/twitter/callback"
+// },
+// function(token, tokenSecret, profile, cb) {
+//   User.findOrCreate({ twitterId: profile.id }, function (err, user) {
+//     return cb(err, user);
+//   });
+// }
+// ));
 
 // Configure Passport authenticated session persistence.
 //
