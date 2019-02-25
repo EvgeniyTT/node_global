@@ -1,6 +1,6 @@
 export const users = [
-  {id: 1, name: 'Bob'},
-  {id: 2, name: 'Martin'}
+  {id: 1, name: 'Bob', login: 'Bobik', pass: '123456'},
+  {id: 2, name: 'Martin', login: 'D@rkMage', pass: 'qwerty'}
 ];
 
 export const products = [

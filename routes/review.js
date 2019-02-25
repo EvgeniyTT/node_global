@@ -1,5 +1,5 @@
 import express from 'express';
-import { products } from './fakeData';
+import { products } from '../helpers/fakeData';
 
 const reviewRouter = express.Router();
 
