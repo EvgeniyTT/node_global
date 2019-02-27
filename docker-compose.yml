@@ -1,0 +1,31 @@
+version: "3"
+services:
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodata:/mongo/data
+  postgres:
+    image: postgres:latest
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: 'postgres'
+    volumes:
+      - database_data:/postgres/data
+  app:
+    image: docker-node-express-mongoapp
+    container_name: app
+    build: .
+    command: npm start
+    ports:
+      - "3000:3000"
+    links:
+      - mongo
+      - postgres
+volumes:
+  mongodata:
+  database_data:
+    driver: local
