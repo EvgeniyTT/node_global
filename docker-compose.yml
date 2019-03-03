@@ -12,7 +12,9 @@ services:
     ports:
       - 5432:5432
     environment:
-      POSTGRES_PASSWORD: 'postgres'
+      - POSTGRES_USER:user
+      - POSTGRES_PASSWORD:pass
+      - POSTGRES_DB:dbname
     volumes:
       - database_data:/postgres/data
   app:
@@ -21,7 +23,7 @@ services:
     build: .
     command: npm start
     ports:
-      - "3000:3000"
+      - "8080:8080"
     links:
       - mongo
       - postgres
