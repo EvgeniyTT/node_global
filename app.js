@@ -1,6 +1,8 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import config from './config/config.json';
+import connectToDb from './db/connect';
+import { fillUpMongoDb } from './db/utils';
 import {
   DirWatcher,
   Importer,
@@ -18,6 +20,9 @@ import {
   productRouter,
   authRouter,
   loginRouter,
+  cityRouter,
+  mongoUserRouter,
+  mongoProductRouter,
 } from './routes';
 import {
   PRODUCTS_URL,
@@ -29,6 +34,9 @@ import {
 } from './utils/endpoints';
 
 const dataFolder = './data';
+
+connectToDb();
+fillUpMongoDb();
 
 const user = new User();
 const product = new Product();
@@ -70,7 +78,11 @@ app.use(LOGIN_URL,
   loginRouter
 );
 
-app.use(checkToken);
+app.use('/api/cities', cityRouter);
+app.use('/api/users', mongoUserRouter);
+app.use('/api/products', mongoProductRouter);
+
+// app.use(checkToken);
 app.use(USERS_URL, userRouter);
 app.use(PRODUCTS_URL, productRouter);
 
