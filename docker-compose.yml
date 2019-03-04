@@ -16,7 +16,7 @@ services:
       - POSTGRES_PASSWORD:pass
       - POSTGRES_DB:dbname
     volumes:
-      - database_data:/postgres/data
+      - database_data:/var/lib/postgresql/data
   app:
     image: docker-node-express-mongoapp
     container_name: app
