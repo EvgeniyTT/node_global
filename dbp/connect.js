@@ -1,6 +1,6 @@
 import Sequelize from 'sequelize';
 
-const sequelize = new Sequelize('postgres://user:pass@postgres:5432/dbname');
+const sequelize = new Sequelize('postgres://postgres:postgres@postgres:5432/postgres');
 
 sequelize
   .authenticate()

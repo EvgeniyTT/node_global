@@ -7,14 +7,14 @@ services:
     volumes:
       - mongodata:/mongo/data
   postgres:
-    image: postgres:latest
+    image: postgres:10
     restart: always
     ports:
-      - 5432:5432
+      - "5432:5432"
     environment:
-      - POSTGRES_USER:user
-      - POSTGRES_PASSWORD:pass
-      - POSTGRES_DB:dbname
+      - POSTGRES_USER:postgres
+      - POSTGRES_PASSWORD:postgres
+      - POSTGRES_DB:postgres
     volumes:
       - database_data:/var/lib/postgresql/data
   app:
