@@ -1,9 +1,8 @@
 import Sequelize from 'sequelize';
 import sequelize from '../connect';
 import { Product } from './product';
-import { views } from '../../helpers/fakeData';
 
-const View = sequelize.define('View', {
+const Review = sequelize.define('Review', {
   id: {
     type: Sequelize.INTEGER,
     unique: true,
@@ -15,17 +14,11 @@ const View = sequelize.define('View', {
   },
   product_id: {
     type: Sequelize.INTEGER,
-    references: {
-      model: Product,
-      key: 'id',
-    }
+    // references: {
+    //   model: Product,
+    //   key: 'id',
+    // }
   },
 });
 
-// force: true will drop the table if it already exists
-View.sync({force: true}).then(() => {
-  // Table created
-  views.forEach(view => View.create(view));
-});
-
-export { View };
+export { Review };

@@ -27,7 +27,7 @@ cityRouter.post('/', async (req, res) => {
   });
   try {
     const savedCity = await city.save();
-    res.status(500).send(savedCity);
+    res.send(savedCity);
   } catch (err) {
     console.error(`Error adding a city: ${err}`);
     res.status(500).send(`Error addin a city: ${err}`);
@@ -51,7 +51,7 @@ cityRouter.put('/:id', async (req, res) => {
       city,
       { upsert: true, new: true }
     );
-    res.status(500).send(savedCity);
+    res.send(savedCity);
   } catch (err) {
     console.error(`Error updating a city: ${err}`);
     res.status(500).send(`Error updating a city: ${err}`);
@@ -61,7 +61,6 @@ cityRouter.put('/:id', async (req, res) => {
 cityRouter.delete('/:id', async (req, res) => {
   try {
     const removedCity = await cityModel.findOneAndDelete({ _id: req.cityId });
-    console.log('removedCity: ', removedCity);
     res.json(removedCity);
   } catch (err) {
     console.error(`Error deleting a city: ${err}`);

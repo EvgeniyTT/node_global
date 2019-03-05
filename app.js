@@ -3,6 +3,8 @@ import bodyParser from 'body-parser';
 import config from './config/config.json';
 import connectToDb from './db/connect';
 import { fillUpMongoDb } from './db/utils';
+import { connectToPostgresDb } from './dbp/connect';
+import { fillUpPostgressDb } from './dbp/utils';
 import {
   DirWatcher,
   Importer,
@@ -24,19 +26,15 @@ import {
   mongoUserRouter,
   mongoProductRouter,
 } from './routes';
-import {
-  PRODUCTS_URL,
-  PRODUCT_URL,
-  REVIEWS_URL,
-  USERS_URL,
-  AUTH_URL,
-  LOGIN_URL,
-} from './utils/endpoints';
+import * as endpoints from './utils/endpoints';
 
 const dataFolder = './data';
 
 connectToDb();
 fillUpMongoDb();
+connectToPostgresDb();
+fillUpPostgressDb();
+
 
 const user = new User();
 const product = new Product();
@@ -66,15 +64,15 @@ app.use(cookieParser);
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.use(AUTH_URL, authRouter);
+app.use(endpoints.AUTH_URL, authRouter);
 
 
 // Initialize Passport and restore authentication state, if any, from the
 // session.
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(LOGIN_URL,
-  passport.authenticate('local', { failureRedirect: AUTH_URL }),
+app.use(endpoints.LOGIN_URL,
+  passport.authenticate('local', { failureRedirect: endpoints.AUTH_URL }),
   loginRouter
 );
 
@@ -82,12 +80,12 @@ app.use('/api/cities', cityRouter);
 app.use('/api/users', mongoUserRouter);
 app.use('/api/products', mongoProductRouter);
 
-// app.use(checkToken);
-app.use(USERS_URL, userRouter);
-app.use(PRODUCTS_URL, productRouter);
+// app.use(checkToken); commented out for easier testing
+app.use(endpoints.USERS_URL, userRouter);
+app.use(endpoints.PRODUCTS_URL, productRouter);
 
 app.get('/', (req, res) => {
-  res.send(`Available endpoints are: ${PRODUCTS_URL}, ${PRODUCT_URL}, ${REVIEWS_URL}, ${USERS_URL}, ${AUTH_URL}, ${LOGIN_URL}`);
+  res.send(`Available endpoints are: ${endpoints}`);
 });
 
 // error handler, no stacktraces leaked to user

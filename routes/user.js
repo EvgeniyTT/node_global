@@ -1,5 +1,4 @@
 import express from 'express';
-// import { users } from '../helpers/fakeData';
 import { User } from '../dbp/models/user';
 
 const userRouter = express.Router();
