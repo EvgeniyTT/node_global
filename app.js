@@ -1,8 +1,8 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import config from './config/config.json';
-import connectToDb from './db/connect';
-import { fillUpMongoDb } from './db/utils';
+import connectToDb from './dbm/connect';
+import { fillUpMongoDb } from './dbm/utils';
 import { connectToPostgresDb } from './dbp/connect';
 import { fillUpPostgressDb } from './dbp/utils';
 import {
@@ -76,16 +76,19 @@ app.use(endpoints.LOGIN_URL,
   loginRouter
 );
 
+// Mongo routes
 app.use('/api/cities', cityRouter);
 app.use('/api/users', mongoUserRouter);
 app.use('/api/products', mongoProductRouter);
 
 // app.use(checkToken); commented out for easier testing
+
+// Postgres routes
 app.use(endpoints.USERS_URL, userRouter);
 app.use(endpoints.PRODUCTS_URL, productRouter);
 
 app.get('/', (req, res) => {
-  res.send(`Available endpoints are: ${endpoints}`);
+  res.send(`Available endpoints are: ${Object.keys(endpoints).map(key => endpoints[key]).join(', ')}`);
 });
 
 // error handler, no stacktraces leaked to user
