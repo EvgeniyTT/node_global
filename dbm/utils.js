@@ -1,5 +1,5 @@
 import { cities, users, products } from '../helpers/fakeData';
-import { cityModel, userModel, productModel } from '../db/models';
+import { cityModel, userModel, productModel } from './models';
 
 export const fillUpMongoDb = () => {
   cities.forEach(cityData => {

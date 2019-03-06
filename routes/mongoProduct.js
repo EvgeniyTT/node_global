@@ -1,5 +1,5 @@
 import express from 'express';
-import { productModel } from '../db/models';
+import { productModel } from '../dbm/models';
 
 const mongoProductRouter = express.Router();
 

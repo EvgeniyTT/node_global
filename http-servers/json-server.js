@@ -1,7 +1,7 @@
 const http = require('http');
-import { cityModel } from '../db/models';
-import connectToDb from '../db/connect';
-import { fillUpMongoDb } from '../db/utils';
+import { cityModel } from '../dbm/models';
+import connectToDb from '../dbm/connect';
+import { fillUpMongoDb } from '../dbm/utils';
 
 const port = 8082;
 connectToDb();

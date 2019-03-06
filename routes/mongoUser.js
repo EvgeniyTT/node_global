@@ -1,5 +1,5 @@
 import express from 'express';
-import { userModel } from '../db/models';
+import { userModel } from '../dbm/models';
 
 const mongoUserRouter = express.Router();
 

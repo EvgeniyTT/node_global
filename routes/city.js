@@ -1,5 +1,5 @@
 import express from 'express';
-import { cityModel } from '../db/models';
+import { cityModel } from '../dbm/models';
 
 const cityRouter = express.Router();
 
