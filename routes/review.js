@@ -4,9 +4,9 @@ import { Review } from '../dbp/models/review';
 
 const reviewRouter = express.Router();
 
-reviewRouter.get('/', (req, res) => {
+reviewRouter.get('/', async(req, res) => {
   try {
-    const review = Review.findAll({ where: { product_id: parseInt(req.productId) } });
+    const review = await Review.findAll({ where: { product_id: parseInt(req.productId) } });
     if (review) {
       res.json(review);
     } else {
