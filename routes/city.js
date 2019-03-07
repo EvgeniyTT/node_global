@@ -1,5 +1,5 @@
 import express from 'express';
-import { cityModel } from '../dbm/models';
+import { cityController } from '../controllers';
 
 const cityRouter = express.Router();
 
@@ -8,25 +8,19 @@ cityRouter.param('id', (req, res, next, id) => {
   next();
 });
 
-
 cityRouter.get('/', async (req, res) => {
-  const cities = await cityModel.find({});
-  res.json(cities);
+  try {
+    const cities = await cityController.getAll();
+    res.json(cities);
+  } catch (err) {
+    console.error(`Error adding a city: ${err}`);
+    res.status(500).send(`Error addin a city: ${err}`);
+  }
 });
 
 cityRouter.post('/', async (req, res) => {
-  const city = cityModel({
-    name: req.body.name,
-    country: req.body.country,
-    capital: req.body.capital,
-    location: {
-      lat: req.body.location.lat,
-      long: req.body.location.long
-    },
-    lastModifiedDate: new Date(),
-  });
   try {
-    const savedCity = await city.save();
+    const savedCity = await cityController.save(req);
     res.send(savedCity);
   } catch (err) {
     console.error(`Error adding a city: ${err}`);
@@ -35,22 +29,8 @@ cityRouter.post('/', async (req, res) => {
 });
 
 cityRouter.put('/:id', async (req, res) => {
-  const city = cityModel({
-    name: req.body.name,
-    country: req.body.country,
-    capital: req.body.capital,
-    location: {
-      lat: req.body.location.lat,
-      long: req.body.location.long
-    },
-    lastModifiedDate: new Date(),
-  });
   try {
-    const savedCity = await cityModel.findOneAndUpdate(
-      { _id: req.cityId },
-      city,
-      { upsert: true, new: true }
-    );
+    const savedCity = await cityController.update(req);
     res.send(savedCity);
   } catch (err) {
     console.error(`Error updating a city: ${err}`);
@@ -60,13 +40,12 @@ cityRouter.put('/:id', async (req, res) => {
 
 cityRouter.delete('/:id', async (req, res) => {
   try {
-    const removedCity = await cityModel.findOneAndDelete({ _id: req.cityId });
+    const removedCity = await cityController.delete(req);
     res.json(removedCity);
   } catch (err) {
     console.error(`Error deleting a city: ${err}`);
     res.status(500).send(`Error deleting a city: ${err}`);
   }
 });
-
 
 export { cityRouter };

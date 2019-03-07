@@ -14,7 +14,7 @@ export const reviews = [
   {id: 2, name: 'review12', product_id: 1},
   {id: 3, name: 'review21', product_id: 2},
   {id: 4, name: 'review22', product_id: 2},
-  {id: 4, name: 'review22', product_id: 3},
+  {id: 5, name: 'review22', product_id: 3},
   {id: 6, name: 'review32', product_id: 3},
 ];
 

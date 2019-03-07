@@ -1,12 +1,11 @@
 import express from 'express';
-import { Review } from '../dbp/models/review';
-
+import { reviewController } from '../controllers';
 
 const reviewRouter = express.Router();
 
 reviewRouter.get('/', async(req, res) => {
   try {
-    const review = await Review.findAll({ where: { product_id: parseInt(req.productId) } });
+    const review = await reviewController.getAll(req);
     if (review) {
       res.json(review);
     } else {

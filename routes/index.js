@@ -4,5 +4,5 @@ export * from './review';
 export * from './auth';
 export * from './login';
 export * from './city';
-export * from './mongoProduct';
-export * from './mongoUser';
+export * from './apiProduct';
+export * from './apiUser';

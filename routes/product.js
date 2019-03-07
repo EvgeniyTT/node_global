@@ -1,6 +1,6 @@
 import express from 'express';
 import { reviewRouter } from './review';
-import { Product } from '../dbp/models/product';
+import { productController } from '../controllers';
 
 const productRouter = express.Router();
 
@@ -13,7 +13,7 @@ productRouter.use('/:id/reviews', reviewRouter);
 
 productRouter.get('/', async(req, res) => {
   try {
-    const products = await Product.findAll();
+    const products = await productController.getAllPg();
     res.json(products);
   } catch (err) {
     console.error(`Error fetching products: ${err}`);
@@ -23,7 +23,7 @@ productRouter.get('/', async(req, res) => {
 
 productRouter.get('/:id', async(req, res) => {
   try {
-    const product = await Product.findOne({ where: { id: req.productId } });
+    const product = await productController.getByIdPg(req);
     if (product) {
       res.json(product);
     } else {
@@ -37,13 +37,12 @@ productRouter.get('/:id', async(req, res) => {
 
 productRouter.post('/', async(req, res) => {
   try {
-    const product = await Product.create(req.body);
+    const product = await productController.savePg(req);
     res.json(product);
   } catch (err) {
     console.error(`Error adding a product ${req.body}: ${err}`);
     res.status(500).send(`Error adding a product ${req.body}: ${err}`);
   }
-
 });
 
 export { productRouter };

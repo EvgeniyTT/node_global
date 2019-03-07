@@ -23,8 +23,8 @@ import {
   authRouter,
   loginRouter,
   cityRouter,
-  mongoUserRouter,
-  mongoProductRouter,
+  apiUserRouter,
+  apiProductRouter,
 } from './routes';
 import * as endpoints from './utils/endpoints';
 
@@ -78,8 +78,8 @@ app.use(endpoints.LOGIN_URL,
 
 // Mongo routes
 app.use('/api/cities', cityRouter);
-app.use('/api/users', mongoUserRouter);
-app.use('/api/products', mongoProductRouter);
+app.use('/api/users', apiUserRouter);
+app.use('/api/products', apiProductRouter);
 
 // app.use(checkToken); commented out for easier testing
 
