@@ -2,6 +2,7 @@ import passport from 'passport';
 import { Strategy as localStrategy } from 'passport-local';
 import { Strategy as TwitterStrategy } from 'passport-twitter';
 import { Strategy as FacebookStrategy } from 'passport-facebook';
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { decodeToken } from '../utils/jwt';
 import { users } from '../helpers/fakeData';
 
@@ -15,7 +16,6 @@ export const checkToken = (req, res, next) => {
     next(error);
   }
 };
-
 
 // Configure the local strategy for use by Passport.
 //
@@ -31,17 +31,39 @@ passport.use(new localStrategy(
   }
 ));
 
-// passport.use(new TwitterStrategy({
-//   consumerKey: TWITTER_CONSUMER_KEY,
-//   consumerSecret: TWITTER_CONSUMER_SECRET,
-//   callbackURL: "http://127.0.0.1:3000/auth/twitter/callback"
-// },
-// function(token, tokenSecret, profile, cb) {
-//   User.findOrCreate({ twitterId: profile.id }, function (err, user) {
-//     return cb(err, user);
-//   });
-// }
-// ));
+passport.use(
+  new TwitterStrategy({
+    consumerKey: process.env.TWITTER_CONSUMER_KEY,
+    consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
+    callbackURL: 'http://127.0.0.1:8080/auth/twitter/callback'
+  },
+  (token, tokenSecret, profile, done) => {
+    users.push(profile);
+    done(null, profile);
+  })
+);
+
+passport.use(new FacebookStrategy({
+  clientID: process.env.FACEBOOK_APP_ID,
+  clientSecret: process.env.FACEBOOK_APP_SECRET,
+  callbackURL: 'https://127.0.0.1:8080/auth/facebook/callback'
+},
+(accessToken, refreshToken, profile, done) => {
+  users.push(profile);
+  done(null, profile);
+}));
+
+passport.use(new GoogleStrategy({
+  clientID: process.env.GOOGLE_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  callbackURL: 'http://127.0.0.1:8080/auth/google/callback'
+},
+(accessToken, refreshToken, profile, done) => {
+  users.push(profile);
+  done(null, profile);
+}
+));
+
 
 // Configure Passport authenticated session persistence.
 //
