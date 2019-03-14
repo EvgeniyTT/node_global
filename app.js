@@ -2,6 +2,10 @@ import express from 'express';
 import session from 'express-session';
 import bodyParser from 'body-parser';
 import config from './config/config.json';
+import connectToDb from './dbm/connect';
+import { fillUpMongoDb } from './dbm/utils';
+import { connectToPostgresDb } from './dbp/connect';
+import { fillUpPostgressDb } from './dbp/utils';
 import {
   DirWatcher,
   Importer,
@@ -19,17 +23,19 @@ import {
   productRouter,
   authRouter,
   loginRouter,
+  cityRouter,
+  apiUserRouter,
+  apiProductRouter,
 } from './routes';
-import {
-  PRODUCTS_URL,
-  PRODUCT_URL,
-  REVIEWS_URL,
-  USERS_URL,
-  AUTH_URL,
-  LOGIN_URL,
-} from './utils/endpoints';
+import * as endpoints from './utils/endpoints';
 
 const dataFolder = './data';
+
+connectToDb();
+fillUpMongoDb();
+connectToPostgresDb();
+fillUpPostgressDb();
+
 
 const user = new User();
 const product = new Product();
@@ -64,15 +70,15 @@ app.use(session({
   secret: 'my secret' 
 }));
 
-app.use(AUTH_URL, authRouter);
+app.use(endpoints.AUTH_URL, authRouter);
 
 
 // Initialize Passport and restore authentication state, if any, from the
 // session.
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(LOGIN_URL,
-  passport.authenticate('local', { failureRedirect: AUTH_URL }),
+app.use(endpoints.LOGIN_URL,
+  passport.authenticate('local', { failureRedirect: endpoints.AUTH_URL }),
   loginRouter
 );
 
@@ -94,12 +100,18 @@ app.get(
   (req, res) => { res.redirect('/'); } // Successful authentication, redirect home.
 );
 
+// Mongo routes
+app.use('/api/cities', cityRouter);
+app.use('/api/users', apiUserRouter);
+app.use('/api/products', apiProductRouter);
+
 app.use(checkToken);
-app.use(USERS_URL, userRouter);
-app.use(PRODUCTS_URL, productRouter);
+// Postgres routes
+app.use(endpoints.USERS_URL, userRouter);
+app.use(endpoints.PRODUCTS_URL, productRouter);
 
 app.get('/', (req, res) => {
-  res.send(`Available endpoints are: ${PRODUCTS_URL}, ${PRODUCT_URL}, ${REVIEWS_URL}, ${USERS_URL}, ${AUTH_URL}, ${LOGIN_URL}`);
+  res.send(`Available endpoints are: ${Object.keys(endpoints).map(key => endpoints[key]).join(', ')}`);
 });
 
 // error handler, no stacktraces leaked to user
