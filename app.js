@@ -1,4 +1,5 @@
 import express from 'express';
+import session from 'express-session';
 import bodyParser from 'body-parser';
 import config from './config/config.json';
 import connectToDb from './dbm/connect';
@@ -63,6 +64,11 @@ app.use(queryParser);
 app.use(cookieParser);
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(session({
+  resave: false,
+  saveUninitialized: true,
+  secret: 'my secret' 
+}));
 
 app.use(endpoints.AUTH_URL, authRouter);
 
@@ -76,13 +82,30 @@ app.use(endpoints.LOGIN_URL,
   loginRouter
 );
 
+app.get('/auth/twitter', passport.authenticate('twitter'));
+app.get('/auth/twitter/callback',
+  passport.authenticate('twitter', { successRedirect: '/', failureRedirect: '/login' }));
+
+app.get('/auth/facebook', passport.authenticate('facebook'));
+app.get(
+  '/auth/facebook/callback',
+  passport.authenticate('facebook', { failureRedirect: '/login' }),
+  (req, res) => { res.redirect('/'); } // Successful authentication, redirect home.
+);
+
+app.get('/auth/google', passport.authenticate('google', { scope: ['profile'] }));
+app.get(
+  '/auth/google/callback', 
+  passport.authenticate('google', { failureRedirect: '/login' }),
+  (req, res) => { res.redirect('/'); } // Successful authentication, redirect home.
+);
+
 // Mongo routes
 app.use('/api/cities', cityRouter);
 app.use('/api/users', apiUserRouter);
 app.use('/api/products', apiProductRouter);
 
-// app.use(checkToken); commented out for easier testing
-
+app.use(checkToken);
 // Postgres routes
 app.use(endpoints.USERS_URL, userRouter);
 app.use(endpoints.PRODUCTS_URL, productRouter);
