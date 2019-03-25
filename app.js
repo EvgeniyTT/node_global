@@ -1,6 +1,8 @@
 import express from 'express';
 import session from 'express-session';
 import bodyParser from 'body-parser';
+import swaggerUi from 'swagger-ui-express';
+import swaggerDocument from './swagger.json';
 import config from './config/config.json';
 import connectToDb from './dbm/connect';
 import { fillUpMongoDb } from './dbm/utils';
@@ -81,6 +83,10 @@ app.use(endpoints.LOGIN_URL,
   passport.authenticate('local', { failureRedirect: endpoints.AUTH_URL }),
   loginRouter
 );
+
+// swagger api docs, served on /api-docs endpoint
+app.use('/', swaggerUi.serve);
+app.get('/', swaggerUi.setup(swaggerDocument));
 
 app.get('/auth/twitter', passport.authenticate('twitter'));
 app.get('/auth/twitter/callback',

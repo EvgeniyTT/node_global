@@ -6,6 +6,8 @@
   "scripts": {
     "test": "test",
     "start": "nodemon --exec babel-node app.js",
+    "docker:build": "docker-compose build",
+    "docker:start": "docker-compose up",
     "express": "nodemon --exec babel-node -r node_modules/dotenv/config index.js",
     "lint": "eslint **/**.*",
     "lint-fix": "eslint --fix **/**.*",
@@ -57,6 +59,7 @@
     "sequelize": "^4.42.1",
     "sequelize-cli": "^5.4.0",
     "stream-replace": "^1.0.0",
+    "swagger-ui-express": "^4.0.2",
     "to-readable-stream": "^1.0.0"
   }
 }
