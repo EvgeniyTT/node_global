@@ -84,7 +84,7 @@ app.use(endpoints.LOGIN_URL,
   loginRouter
 );
 
-// swagger api docs, served on /api-docs endpoint
+// swagger api docs, served on the root / endpoint
 app.use('/', swaggerUi.serve);
 app.get('/', swaggerUi.setup(swaggerDocument));
 
@@ -115,10 +115,6 @@ app.use(checkToken);
 // Postgres routes
 app.use(endpoints.USERS_URL, userRouter);
 app.use(endpoints.PRODUCTS_URL, productRouter);
-
-app.get('/', (req, res) => {
-  res.send(`Available endpoints are: ${Object.keys(endpoints).map(key => endpoints[key]).join(', ')}`);
-});
 
 // error handler, no stacktraces leaked to user
 app.use(function(err, req, res, next) {
