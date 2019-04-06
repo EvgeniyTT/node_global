@@ -1,0 +1,516 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "Swagger doc for node app",
+    "version" : "1.0.0",
+    "title" : "Swagger Node Training",
+    "contact" : {
+      "email" : "tatarin.e.m@gmail.com"
+    }
+  },
+  "tags" : [ {
+    "name" : "users",
+    "description" : "Operations about users"
+  }, {
+    "name" : "products",
+    "description" : "Operations about products"
+  }, {
+    "name" : "cities",
+    "description" : "Operations about cities"
+  }, {
+    "name" : "auth",
+    "description" : "Available auth methods"
+  } ],
+  "paths" : {
+    "/users" : {
+      "get" : {
+        "tags" : [ "users" ],
+        "summary" : "Get all users from PostgreSQL DB",
+        "operationId" : "getAllUsersPostresql",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/User"
+            }
+          },
+          "500" : {
+            "description" : "Error fetching all users"
+          }
+        }
+      }
+    },
+    "/api/users" : {
+      "get" : {
+        "tags" : [ "users" ],
+        "summary" : "Get all users from Mongo DB",
+        "operationId" : "getAllUsersMongo",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/User"
+              }
+            }
+          },
+          "500" : {
+            "description" : "Error fetching all users"
+          }
+        }
+      }
+    },
+    "/api/users/{id}" : {
+      "delete" : {
+        "tags" : [ "users" ],
+        "summary" : "Delete user from Mongo DB",
+        "operationId" : "deleteUserMongo",
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "id of the user that should be deleted",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "returns deleted user",
+            "schema" : {
+              "$ref" : "#/definitions/User"
+            }
+          },
+          "500" : {
+            "description" : "Error deleting a user"
+          }
+        }
+      }
+    },
+    "/products/" : {
+      "get" : {
+        "tags" : [ "products" ],
+        "summary" : "Get all products from PostgreSQL DB",
+        "operationId" : "getAllProductsPostresql",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Product"
+              }
+            }
+          },
+          "500" : {
+            "description" : "Error fetching all products"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "products" ],
+        "summary" : "Creates a new product in PostgreSQL DB",
+        "operationId" : "createProductPostresql",
+        "consumes" : [ "application/x-www-form-urlencoded" ],
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "added product",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Product"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Product"
+            }
+          },
+          "500" : {
+            "description" : "Error adding a product"
+          }
+        }
+      }
+    },
+    "/products/{id}" : {
+      "get" : {
+        "tags" : [ "products" ],
+        "summary" : "Find product by ID",
+        "description" : "Returns a single product from PostgreSQL DB",
+        "operationId" : "getProductByIdPostresql",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "ID of product to return",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Product"
+            }
+          },
+          "400" : {
+            "description" : "There is no product with such id"
+          },
+          "500" : {
+            "description" : "Error fetching product with such id"
+          }
+        }
+      }
+    },
+    "/products/{id}/reviews" : {
+      "get" : {
+        "tags" : [ "products" ],
+        "summary" : "Get all reviews of a product",
+        "description" : "Returns all reviews of a particular product by product ID from PostgreSQL DB",
+        "operationId" : "getReviewsByProductIdPostresql",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "ID of product",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Review"
+              }
+            }
+          },
+          "400" : {
+            "description" : "There is no reviews for the product with such id"
+          },
+          "500" : {
+            "description" : "Error fetching reviews"
+          }
+        }
+      }
+    },
+    "/api/products" : {
+      "get" : {
+        "tags" : [ "products" ],
+        "summary" : "Get all products from Mongo DB",
+        "operationId" : "getAllProductsMongo",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Product"
+            }
+          },
+          "500" : {
+            "description" : "Error fetching all products"
+          }
+        }
+      }
+    },
+    "/api/products/{id}" : {
+      "delete" : {
+        "tags" : [ "products" ],
+        "summary" : "Delete a product from Mongo DB",
+        "operationId" : "deleteProductMongo",
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "id of the product that should be deleted",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "returns deleted product",
+            "schema" : {
+              "$ref" : "#/definitions/Product"
+            }
+          },
+          "500" : {
+            "description" : "Error deleting a product"
+          }
+        }
+      }
+    },
+    "/api/cities" : {
+      "get" : {
+        "tags" : [ "cities" ],
+        "summary" : "Get all cities from Mongo DB",
+        "operationId" : "getAllCitiesMongo",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/City"
+              }
+            }
+          },
+          "500" : {
+            "description" : "Error fetching all cities"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "cities" ],
+        "summary" : "Creates a city in Mongo DB",
+        "operationId" : "createCityMongo",
+        "consumes" : [ "application/x-www-form-urlencoded" ],
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "added city",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/City"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/City"
+            }
+          },
+          "500" : {
+            "description" : "Error adding a city"
+          }
+        }
+      }
+    },
+    "/api/cities/{id}" : {
+      "delete" : {
+        "tags" : [ "cities" ],
+        "summary" : "Delete city by id from Mongo DB",
+        "operationId" : "deleteCityMongo",
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "id of the city that should be deleted",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "returns deleted city",
+            "schema" : {
+              "$ref" : "#/definitions/City"
+            }
+          },
+          "500" : {
+            "description" : "Error deleting a city"
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "cities" ],
+        "summary" : "Update city by idfrom Mongo DB",
+        "operationId" : "updateCityMongo",
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "id of the city that should be updated",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "returns updated city",
+            "schema" : {
+              "$ref" : "#/definitions/City"
+            }
+          },
+          "500" : {
+            "description" : "Error updating a city"
+          }
+        }
+      }
+    },
+    "/auth" : {
+      "get" : {
+        "tags" : [ "auth" ],
+        "summary" : "Auth by login\\password",
+        "operationId" : "auth",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/User"
+            },
+            "headers" : {
+              "token" : {
+                "type" : "string",
+                "description" : "auth token to be passed back and forth"
+              }
+            }
+          },
+          "404" : {
+            "description" : "Can not find a user with such username and password"
+          }
+        }
+      }
+    },
+    "/auth/twitter" : {
+      "get" : {
+        "tags" : [ "auth" ],
+        "summary" : "Auth with twitter SSO",
+        "operationId" : "authTwitter",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/User"
+            }
+          }
+        }
+      }
+    },
+    "/auth/facebook" : {
+      "get" : {
+        "tags" : [ "auth" ],
+        "summary" : "Auth with facebook SSO",
+        "operationId" : "authFacebook",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/User"
+            }
+          }
+        }
+      }
+    },
+    "/auth/google" : {
+      "get" : {
+        "tags" : [ "auth" ],
+        "summary" : "Auth with google SSO",
+        "operationId" : "authGoogle",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/User"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "User" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "login" : {
+          "type" : "string"
+        },
+        "pass" : {
+          "type" : "string"
+        }
+      },
+      "xml" : {
+        "name" : "User"
+      }
+    },
+    "Product" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "reviews" : {
+          "type" : "array",
+          "xml" : {
+            "name" : "review",
+            "wrapped" : true
+          },
+          "items" : {
+            "$ref" : "#/definitions/Review"
+          }
+        }
+      },
+      "xml" : {
+        "name" : "Product"
+      }
+    },
+    "Review" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        }
+      },
+      "xml" : {
+        "name" : "Review"
+      }
+    },
+    "City" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "country" : {
+          "type" : "string"
+        },
+        "capital" : {
+          "type" : "boolean"
+        },
+        "location" : {
+          "type" : "object",
+          "properties" : {
+            "lat" : {
+              "type" : "number"
+            },
+            "long" : {
+              "type" : "number"
+            }
+          }
+        }
+      },
+      "xml" : {
+        "name" : "City"
+      }
+    }
+  },
+  "host" : "virtserver.swaggerhub.com",
+  "basePath" : "/DiTT/node_training/1.0.0",
+  "schemes" : [ "https", "http" ]
+}

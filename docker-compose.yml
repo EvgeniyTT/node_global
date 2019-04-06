@@ -21,7 +21,7 @@ services:
     image: docker-node-express-mongoapp
     container_name: app
     build: .
-    command: npm start
+    command: npm run express
     ports:
       - "8080:8080"
     links:

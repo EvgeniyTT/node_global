@@ -1,6 +1,8 @@
 import express from 'express';
 import session from 'express-session';
 import bodyParser from 'body-parser';
+import swaggerUi from 'swagger-ui-express';
+import swaggerDocument from './swagger.json';
 import config from './config/config.json';
 import connectToDb from './dbm/connect';
 import { fillUpMongoDb } from './dbm/utils';
@@ -82,6 +84,10 @@ app.use(endpoints.LOGIN_URL,
   loginRouter
 );
 
+// swagger api docs, served on the root / endpoint
+app.use('/', swaggerUi.serve);
+app.get('/', swaggerUi.setup(swaggerDocument));
+
 app.get('/auth/twitter', passport.authenticate('twitter'));
 app.get('/auth/twitter/callback',
   passport.authenticate('twitter', { successRedirect: '/', failureRedirect: '/login' }));
@@ -109,10 +115,6 @@ app.use(checkToken);
 // Postgres routes
 app.use(endpoints.USERS_URL, userRouter);
 app.use(endpoints.PRODUCTS_URL, productRouter);
-
-app.get('/', (req, res) => {
-  res.send(`Available endpoints are: ${Object.keys(endpoints).map(key => endpoints[key]).join(', ')}`);
-});
 
 // error handler, no stacktraces leaked to user
 app.use(function(err, req, res, next) {

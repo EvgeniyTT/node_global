@@ -8,4 +8,4 @@ COPY . .
 
 WORKDIR /node_global/dist
 EXPOSE 8080
-CMD ["npm", "start"]
+CMD ["npm", "run", "express"]
